@@ -1,0 +1,12 @@
+---
+pre-commit:
+  commands:
+    statix:
+      glob: "*.nix"
+      run: timeout ${LEFTHOOK_STATIX_TIMEOUT:-30} statix check {staged_files}
+
+pre-push:
+  commands:
+    statix:
+      glob: "*.nix"
+      run: timeout ${LEFTHOOK_STATIX_TIMEOUT:-30} statix check {push_files}
