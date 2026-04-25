@@ -3,10 +3,10 @@ pre-commit:
   commands:
     statix:
       glob: "*.nix"
-      run: timeout ${LEFTHOOK_STATIX_TIMEOUT:-30} statix check {staged_files}
+      run: timeout ${LEFTHOOK_STATIX_TIMEOUT:-30} lefthook-statix {staged_files}
 
 pre-push:
   commands:
     statix:
       glob: "*.nix"
-      run: timeout ${LEFTHOOK_STATIX_TIMEOUT:-30} statix check {push_files}
+      run: timeout ${LEFTHOOK_STATIX_TIMEOUT:-30} lefthook-statix {push_files}
