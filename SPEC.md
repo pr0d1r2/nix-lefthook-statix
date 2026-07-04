@@ -79,3 +79,5 @@ nix-lefthook-statix is a Nix flake that packages a lefthook-compatible wrapper a
 5. **No TOML linter.** `.rtk/filters.toml` is tracked in git but has no corresponding linter in lefthook, violating the linter skill rule that every tracked file type must have an assigned linter.
 
 6. **Sequential file processing in wrapper.** `lefthook-statix.sh` processes files one-at-a-time in a loop rather than passing all files to `statix check` at once. This is less efficient for large changesets but ensures per-file error reporting.
+
+7. **SPEC.md exceeds file-size-check default limit.** `SPEC.md` (5825 bytes) exceeded the default 4096-byte limit in `config/lefthook/file_size_limits.yml`, causing `file-size-check` to fail in CI. Fixed by adding `md: 8192` extension override.
