@@ -67,6 +67,9 @@ remotes:
 pre-commit:
   parallel: true
   commands:
+    markdownlint:
+      glob: "*.md"
+      run: timeout 30 markdownlint {staged_files}
     statix:
       glob: "*.nix"
       run: timeout ${LEFTHOOK_STATIX_TIMEOUT:-30} statix check {staged_files}
@@ -74,6 +77,9 @@ pre-commit:
 pre-push:
   parallel: true
   commands:
+    markdownlint:
+      glob: "*.md"
+      run: timeout 30 markdownlint {push_files}
     statix:
       glob: "*.nix"
       run: timeout ${LEFTHOOK_STATIX_TIMEOUT:-30} statix check {push_files}

@@ -200,6 +200,7 @@
             pkgs.lefthook
             pkgs.nix
             pkgs.parallel
+            pkgs.markdownlint-cli
             pkgs.statix
           ]
           ++ (lefthookWrappersFor pkgs);
