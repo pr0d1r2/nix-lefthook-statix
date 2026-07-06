@@ -57,3 +57,18 @@ EOF
     run lefthook-statix "$TEST_TEMP/good.nix" "$TEST_TEMP/file.txt"
     assert_success
 }
+
+@test "exits non-zero when mixing passing and failing nix files" {
+    cat > "$TEST_TEMP/good.nix" << 'EOF'
+{ pkgs }:
+pkgs.hello
+EOF
+    cat > "$TEST_TEMP/bad.nix" << 'EOF'
+let
+  x = 1;
+in
+  if x == true then "yes" else "no"
+EOF
+    run lefthook-statix "$TEST_TEMP/good.nix" "$TEST_TEMP/bad.nix"
+    assert_failure
+}
