@@ -73,6 +73,9 @@ pre-commit:
     statix:
       glob: "*.nix"
       run: timeout ${LEFTHOOK_STATIX_TIMEOUT:-30} statix check {staged_files}
+    taplo:
+      glob: "*.toml"
+      run: timeout 30 taplo lint {staged_files}
 
 pre-push:
   parallel: true
@@ -83,3 +86,6 @@ pre-push:
     statix:
       glob: "*.nix"
       run: timeout ${LEFTHOOK_STATIX_TIMEOUT:-30} statix check {push_files}
+    taplo:
+      glob: "*.toml"
+      run: timeout 30 taplo lint {push_files}

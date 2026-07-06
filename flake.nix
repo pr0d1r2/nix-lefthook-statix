@@ -202,6 +202,7 @@
             pkgs.parallel
             pkgs.markdownlint-cli
             pkgs.statix
+            pkgs.taplo
           ]
           ++ (lefthookWrappersFor pkgs);
         in

@@ -62,7 +62,7 @@ nix-lefthook-statix is a Nix flake that packages a lefthook-compatible wrapper a
 | `x` | T3 | ~~Update `actions/checkout` in `update-pins.yml` from `@v4` to `@v6` to match `ci.yml`.~~ Obsolete — `update-pins.yml` was removed. |
 | `x` | T4 | Add test for exit code when mixing passing and failing `.nix` files in one invocation. |
 | `x` | T5 | Add test for files with spaces or special characters in names. |
-| `.` | T6 | Add TOML linter to lefthook for `.rtk/filters.toml` (linter skill requires every tracked file type to have a linter). |
+| `x` | T6 | Add TOML linter to lefthook for `.rtk/filters.toml` (linter skill requires every tracked file type to have a linter). |
 | `.` | T7 | Harmonize bats library loading: `dev.bats` uses `load.bash` extension while `lefthook-statix.bats` uses `load` without extension. |
 | `.` | T8 | Add `nix/direnv.sh` extraction per flake skill (dev shell invocations should use an extracted shell script). |
 
@@ -76,7 +76,7 @@ nix-lefthook-statix is a Nix flake that packages a lefthook-compatible wrapper a
 
 4. ~~**No markdownlint lefthook command.**~~ Resolved — `lefthook.yml` now has markdownlint in both `pre-commit` and `pre-push`.
 
-5. **No TOML linter.** `.rtk/filters.toml` is tracked in git but has no corresponding linter in lefthook, violating the linter skill rule that every tracked file type must have an assigned linter.
+5. ~~**No TOML linter.**~~ Resolved — `lefthook.yml` now has a `taplo lint` command in both `pre-commit` and `pre-push` scoped to `*.toml`, and `taplo` is in both dev shells.
 
 6. **Sequential file processing in wrapper.** `lefthook-statix.sh` processes files one-at-a-time in a loop rather than passing all files to `statix check` at once. This is less efficient for large changesets but ensures per-file error reporting.
 
