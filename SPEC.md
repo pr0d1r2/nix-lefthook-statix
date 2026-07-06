@@ -61,7 +61,7 @@ nix-lefthook-statix is a Nix flake that packages a lefthook-compatible wrapper a
 | `x` | T2 | Add markdownlint lefthook check for `.md` files (config exists at `.markdownlint.yml` but no lefthook command uses it). |
 | `x` | T3 | ~~Update `actions/checkout` in `update-pins.yml` from `@v4` to `@v6` to match `ci.yml`.~~ Obsolete — `update-pins.yml` was removed. |
 | `x` | T4 | Add test for exit code when mixing passing and failing `.nix` files in one invocation. |
-| `.` | T5 | Add test for files with spaces or special characters in names. |
+| `x` | T5 | Add test for files with spaces or special characters in names. |
 | `.` | T6 | Add TOML linter to lefthook for `.rtk/filters.toml` (linter skill requires every tracked file type to have a linter). |
 | `.` | T7 | Harmonize bats library loading: `dev.bats` uses `load.bash` extension while `lefthook-statix.bats` uses `load` without extension. |
 | `.` | T8 | Add `nix/direnv.sh` extraction per flake skill (dev shell invocations should use an extracted shell script). |
