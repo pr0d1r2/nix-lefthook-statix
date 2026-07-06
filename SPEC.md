@@ -68,13 +68,13 @@ nix-lefthook-statix is a Nix flake that packages a lefthook-compatible wrapper a
 
 ## §B — Bugs / Known Issues
 
-1. **`.envrc` missing `watch_file` entries.** The direnv skill requires `.envrc` to watch `flake.nix`, `flake.lock`, and dependent files for changes. Currently it only contains `use flake`, so changes to `dev.sh` or flake modules won't trigger a direnv reload.
+1. ~~**`.envrc` missing `watch_file` entries.**~~ Resolved — `.envrc` now watches `flake.nix`, `flake.lock`, and `dev.sh`.
 
 2. ~~**Inconsistent `actions/checkout` versions.**~~ Resolved — `update-pins.yml` was removed.
 
 3. **Inconsistent bats library loading.** `tests/unit/dev.bats` loads helpers with explicit `.bash` extension (`load.bash`) while `tests/unit/lefthook-statix.bats` uses the extensionless form (`load`). Both work but the inconsistency may cause confusion.
 
-4. **No markdownlint lefthook command.** A `.markdownlint.yml` config exists but no lefthook check enforces it. The `.md` file type is tracked in git but has no assigned linter in `lefthook.yml`.
+4. ~~**No markdownlint lefthook command.**~~ Resolved — `lefthook.yml` now has markdownlint in both `pre-commit` and `pre-push`.
 
 5. **No TOML linter.** `.rtk/filters.toml` is tracked in git but has no corresponding linter in lefthook, violating the linter skill rule that every tracked file type must have an assigned linter.
 
