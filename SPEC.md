@@ -59,7 +59,7 @@ nix-lefthook-statix is a Nix flake that packages a lefthook-compatible wrapper a
 |---|---|---|
 | `x` | T1 | Add `watch_file` entries to `.envrc` for `flake.nix`, `flake.lock`, and `dev.sh` per direnv skill rules. |
 | `x` | T2 | Add markdownlint lefthook check for `.md` files (config exists at `.markdownlint.yml` but no lefthook command uses it). |
-| `x` | T3 | Update `actions/checkout` in `update-pins.yml` from `@v4` to `@v6` to match `ci.yml`. |
+| `x` | T3 | ~~Update `actions/checkout` in `update-pins.yml` from `@v4` to `@v6` to match `ci.yml`.~~ Obsolete — `update-pins.yml` was removed. |
 | `.` | T4 | Add test for exit code when mixing passing and failing `.nix` files in one invocation. |
 | `.` | T5 | Add test for files with spaces or special characters in names. |
 | `.` | T6 | Add TOML linter to lefthook for `.rtk/filters.toml` (linter skill requires every tracked file type to have a linter). |
@@ -68,16 +68,18 @@ nix-lefthook-statix is a Nix flake that packages a lefthook-compatible wrapper a
 
 ## §B — Bugs / Known Issues
 
-1. **`.envrc` missing `watch_file` entries.** The direnv skill requires `.envrc` to watch `flake.nix`, `flake.lock`, and dependent files for changes. Currently it only contains `use flake`, so changes to `dev.sh` or flake modules won't trigger a direnv reload.
+1. ~~**`.envrc` missing `watch_file` entries.**~~ Resolved — `.envrc` now watches `flake.nix`, `flake.lock`, and `dev.sh`.
 
-2. **Inconsistent `actions/checkout` versions.** `ci.yml` uses `actions/checkout@v6` while `update-pins.yml` uses `actions/checkout@v4`. Both should use the same version.
+2. ~~**Inconsistent `actions/checkout` versions.**~~ Resolved — `update-pins.yml` was removed.
 
 3. **Inconsistent bats library loading.** `tests/unit/dev.bats` loads helpers with explicit `.bash` extension (`load.bash`) while `tests/unit/lefthook-statix.bats` uses the extensionless form (`load`). Both work but the inconsistency may cause confusion.
 
-4. **No markdownlint lefthook command.** A `.markdownlint.yml` config exists but no lefthook check enforces it. The `.md` file type is tracked in git but has no assigned linter in `lefthook.yml`.
+4. ~~**No markdownlint lefthook command.**~~ Resolved — `lefthook.yml` now has markdownlint in both `pre-commit` and `pre-push`.
 
 5. **No TOML linter.** `.rtk/filters.toml` is tracked in git but has no corresponding linter in lefthook, violating the linter skill rule that every tracked file type must have an assigned linter.
 
 6. **Sequential file processing in wrapper.** `lefthook-statix.sh` processes files one-at-a-time in a loop rather than passing all files to `statix check` at once. This is less efficient for large changesets but ensures per-file error reporting.
 
 7. **SPEC.md exceeds file-size-check default limit.** `SPEC.md` (5825 bytes) exceeded the default 4096-byte limit in `config/lefthook/file_size_limits.yml`, causing `file-size-check` to fail in CI. Fixed by adding `md: 8192` extension override.
+
+8. **Orphaned `tests/unit/update-pins.bats` after `update-pins.yml` removal.** The pin-refresh commit dropped `.github/workflows/update-pins.yml` but left its test file, causing two bats failures in CI. Fixed by removing the orphaned test file.
