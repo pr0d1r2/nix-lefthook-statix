@@ -63,7 +63,7 @@ nix-lefthook-statix is a Nix flake that packages a lefthook-compatible wrapper a
 | `x` | T4 | Add test for exit code when mixing passing and failing `.nix` files in one invocation. |
 | `x` | T5 | Add test for files with spaces or special characters in names. |
 | `x` | T6 | Add TOML linter to lefthook for `.rtk/filters.toml` (linter skill requires every tracked file type to have a linter). |
-| `.` | T7 | Harmonize bats library loading: `dev.bats` uses `load.bash` extension while `lefthook-statix.bats` uses `load` without extension. |
+| `x` | T7 | Harmonize bats library loading: `dev.bats` uses `load.bash` extension while `lefthook-statix.bats` uses `load` without extension. |
 | `.` | T8 | Add `nix/direnv.sh` extraction per flake skill (dev shell invocations should use an extracted shell script). |
 
 ## §B — Bugs / Known Issues
@@ -72,7 +72,7 @@ nix-lefthook-statix is a Nix flake that packages a lefthook-compatible wrapper a
 
 2. ~~**Inconsistent `actions/checkout` versions.**~~ Resolved — `update-pins.yml` was removed.
 
-3. **Inconsistent bats library loading.** `tests/unit/dev.bats` loads helpers with explicit `.bash` extension (`load.bash`) while `tests/unit/lefthook-statix.bats` uses the extensionless form (`load`). Both work but the inconsistency may cause confusion.
+3. ~~**Inconsistent bats library loading.**~~ Resolved — all bats test files now use the explicit `.bash` extension (`load.bash`) with braced variable syntax (`${BATS_LIB_PATH}`).
 
 4. ~~**No markdownlint lefthook command.**~~ Resolved — `lefthook.yml` now has markdownlint in both `pre-commit` and `pre-push`.
 
