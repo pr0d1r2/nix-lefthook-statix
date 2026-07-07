@@ -7,17 +7,12 @@ setup() {
     ENVRC="$BATS_TEST_DIRNAME/../../.envrc"
 }
 
-@test "watches flake.nix for changes" {
-    run grep 'watch_file flake.nix' "$ENVRC"
+@test "watches nix/direnv.sh for changes" {
+    run grep 'watch_file nix/direnv.sh' "$ENVRC"
     assert_success
 }
 
-@test "watches flake.lock for changes" {
-    run grep 'watch_file flake.lock' "$ENVRC"
-    assert_success
-}
-
-@test "watches dev.sh for changes" {
-    run grep 'watch_file dev.sh' "$ENVRC"
+@test "sources nix/direnv.sh" {
+    run grep -F '. nix/direnv.sh' "$ENVRC"
     assert_success
 }

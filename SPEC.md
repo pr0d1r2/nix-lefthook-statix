@@ -64,7 +64,7 @@ nix-lefthook-statix is a Nix flake that packages a lefthook-compatible wrapper a
 | `x` | T5 | Add test for files with spaces or special characters in names. |
 | `x` | T6 | Add TOML linter to lefthook for `.rtk/filters.toml` (linter skill requires every tracked file type to have a linter). |
 | `x` | T7 | Harmonize bats library loading: `dev.bats` uses `load.bash` extension while `lefthook-statix.bats` uses `load` without extension. |
-| `.` | T8 | Add `nix/direnv.sh` extraction per flake skill (dev shell invocations should use an extracted shell script). |
+| `x` | T8 | Add `nix/direnv.sh` extraction per flake skill (dev shell invocations should use an extracted shell script). |
 
 ## §B — Bugs / Known Issues
 
