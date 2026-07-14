@@ -83,3 +83,5 @@ nix-lefthook-statix is a Nix flake that packages a lefthook-compatible wrapper a
 7. **SPEC.md exceeds file-size-check default limit.** `SPEC.md` (5825 bytes) exceeded the default 4096-byte limit in `config/lefthook/file_size_limits.yml`, causing `file-size-check` to fail in CI. Fixed by adding `md: 8192` extension override.
 
 8. **Orphaned `tests/unit/update-pins.bats` after `update-pins.yml` removal.** The pin-refresh commit dropped `.github/workflows/update-pins.yml` but left its test file, causing two bats failures in CI. Fixed by removing the orphaned test file.
+
+9. **Missing `lefthook-markdownlint` / `lefthook-markdownlint-agentic` wrappers.** `lefthook.yml` invoked `lefthook-markdownlint` and `lefthook-markdownlint-agentic`, but `flake.nix` never packaged those wrappers, so both commands exited 127 (`No such file or directory`) in CI's `build-linux`. Fixed by adding the `nix-lefthook-markdownlint` and `nix-lefthook-markdownlint-agentic` flake inputs and wrapping them in `lefthookWrappersFor` (matching the upstream packaging, including the `is-markdown-agentic` runtime input and the `@MARKDOWNLINT_AGENTIC_CONFIG@` substitution).
