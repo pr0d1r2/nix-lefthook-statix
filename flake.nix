@@ -58,16 +58,21 @@
         set-and-setting.lib.mkDevShells {
           inherit pkgs;
           basePackages = mat.packages;
-          settingHook = ''
-            ${self.packages.${sys}.setting}/bin/sync-setting .
-            _assemble_out="$(mktemp -d)"
-            FRAGMENTS="${builtins.concatStringsSep " " fragments}" \
-              out="$_assemble_out" \
-              FRAGMENTS_DIR="${set-and-setting}/setting/integrations/lefthook" \
-              bash "${set-and-setting}/setting/lib/assemble-lefthook.sh"
-            cp -f "$_assemble_out/lefthook.yml" lefthook.yml
-            rm -rf "$_assemble_out"
-          '';
+          settingHook =
+            builtins.replaceStrings
+              [
+                "@SETTING_BIN@"
+                "@FRAGMENTS@"
+                "@FRAGMENTS_DIR@"
+                "@ASSEMBLE_SCRIPT@"
+              ]
+              [
+                "${self.packages.${sys}.setting}"
+                "${builtins.concatStringsSep " " fragments}"
+                "${set-and-setting}/setting/integrations/lefthook"
+                "${set-and-setting}/setting/lib/assemble-lefthook.sh"
+              ]
+              (builtins.readFile ./nix/setting-hook.sh);
         }
       );
 
@@ -106,15 +111,25 @@
                   pkgs.gnugrep
                 ]
                 ++ mat.packages;
-                text = ''
-                  export FRAGMENTS_DIR="${set-and-setting}/setting/integrations/lefthook"
-                  export ASSEMBLE_SCRIPT="${set-and-setting}/setting/lib/assemble-lefthook.sh"
-                  export DETECT_SCRIPT="${set-and-setting}/setting/lib/detect-fragments.sh"
-                  export SETTING_SRC="${self.packages.${pkgs.stdenv.hostPlatform.system}.setting}"
-                  export CONFIRM_SCRIPT="${set-and-setting}/lib/confirm.sh"
-                  export CONFIRM_REV="${set-and-setting.rev or "unknown"}"
-                  bash "$CONFIRM_SCRIPT"
-                '';
+                text =
+                  builtins.replaceStrings
+                    [
+                      "@FRAGMENTS_DIR@"
+                      "@ASSEMBLE_SCRIPT@"
+                      "@DETECT_SCRIPT@"
+                      "@SETTING_SRC@"
+                      "@CONFIRM_SCRIPT@"
+                      "@CONFIRM_REV@"
+                    ]
+                    [
+                      "${set-and-setting}/setting/integrations/lefthook"
+                      "${set-and-setting}/setting/lib/assemble-lefthook.sh"
+                      "${set-and-setting}/setting/lib/detect-fragments.sh"
+                      "${self.packages.${pkgs.stdenv.hostPlatform.system}.setting}"
+                      "${set-and-setting}/lib/confirm.sh"
+                      "${set-and-setting.rev or "unknown"}"
+                    ]
+                    (builtins.readFile ./nix/confirm.sh);
               }
             }/bin/confirm";
           };
