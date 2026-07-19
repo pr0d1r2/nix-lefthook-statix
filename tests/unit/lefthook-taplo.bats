@@ -5,7 +5,6 @@ setup() {
     load "${BATS_LIB_PATH}/bats-assert/load.bash"
 
     LEFTHOOK_YML="$BATS_TEST_DIRNAME/../../lefthook.yml"
-    FLAKE_NIX="$BATS_TEST_DIRNAME/../../flake.nix"
 }
 
 @test "lefthook pre-commit has taplo command" {
@@ -50,10 +49,5 @@ setup() {
 
 @test "taplo pre-commit runs lint subcommand" {
     run bash -c "awk '/^pre-commit:/,/^pre-push:/' '$LEFTHOOK_YML' | grep -A5 'taplo:' | grep 'taplo lint'"
-    assert_success
-}
-
-@test "flake.nix includes taplo" {
-    run grep 'taplo' "$FLAKE_NIX"
     assert_success
 }

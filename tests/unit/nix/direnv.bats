@@ -22,6 +22,16 @@ setup() {
     assert_success
 }
 
+@test "watches nix/setting-hook.sh for changes" {
+    run grep 'watch_file nix/setting-hook.sh' "$DIRENV_SH"
+    assert_success
+}
+
+@test "watches nix/confirm.sh for changes" {
+    run grep 'watch_file nix/confirm.sh' "$DIRENV_SH"
+    assert_success
+}
+
 @test "uses flake" {
     run grep 'use flake' "$DIRENV_SH"
     assert_success

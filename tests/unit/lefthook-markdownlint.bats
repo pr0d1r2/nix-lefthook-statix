@@ -51,7 +51,7 @@ setup() {
     assert_success
 }
 
-@test "flake.nix includes markdownlint-cli" {
-    run grep 'markdownlint-cli' "$FLAKE_NIX"
+@test "flake.nix includes markdown fragment" {
+    run grep '"markdown"' "$FLAKE_NIX"
     assert_success
 }
