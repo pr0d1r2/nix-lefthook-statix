@@ -1,6 +1,11 @@
+# nix-lefthook-statix
+
 ## §D — Description
 
-nix-lefthook-statix is a Nix flake that packages a lefthook-compatible wrapper around [statix](https://github.com/nerdypepper/statix), a static analysis tool for Nix files. The wrapper filters `.nix` files from staged arguments, silently skips missing files, and runs statix on each remaining file, exiting non-zero if any check fails. It is consumed by other Nix projects either as a lefthook remote (pulling `lefthook-remote.yml`) or as a flake input providing a `lefthook-statix` executable. Target users are Nix developers who want automated statix linting in their git pre-commit and pre-push hooks.
+nix-lefthook-statix is a Nix flake that packages a lefthook-compatible wrapper around [statix](https://github.com/nerdypepper/statix), a static analysis tool for Nix files.
+The wrapper filters `.nix` files from staged arguments, silently skips missing files, and runs statix on each remaining file, exiting non-zero if any check fails.
+It is consumed by other Nix projects either as a lefthook remote (pulling `lefthook-remote.yml`) or as a flake input providing a `lefthook-statix` executable.
+Target users are Nix developers who want automated statix linting in their git pre-commit and pre-push hooks.
 
 ## §V — Invariants
 
@@ -84,6 +89,15 @@ nix-lefthook-statix is a Nix flake that packages a lefthook-compatible wrapper a
 
 8. **Orphaned `tests/unit/update-pins.bats` after `update-pins.yml` removal.** The pin-refresh commit dropped `.github/workflows/update-pins.yml` but left its test file, causing two bats failures in CI. Fixed by removing the orphaned test file.
 
-9. **Missing `lefthook-markdownlint` / `lefthook-markdownlint-agentic` wrappers.** `lefthook.yml` invoked `lefthook-markdownlint` and `lefthook-markdownlint-agentic`, but `flake.nix` never packaged those wrappers, so both commands exited 127 (`No such file or directory`) in CI's `build-linux`. Fixed by adding the `nix-lefthook-markdownlint` and `nix-lefthook-markdownlint-agentic` flake inputs and wrapping them in `lefthookWrappersFor` (matching the upstream packaging, including the `is-markdown-agentic` runtime input and the `@MARKDOWNLINT_AGENTIC_CONFIG@` substitution).
+9. **Missing `lefthook-markdownlint` / `lefthook-markdownlint-agentic` wrappers.** `lefthook.yml` invoked `lefthook-markdownlint` and `lefthook-markdownlint-agentic`,
+but `flake.nix` never packaged those wrappers, so both commands exited 127 in CI's `build-linux`.
+Fixed by adding the flake inputs and wrapping them in `lefthookWrappersFor`.
 
-10. **Duplicate `default` attribute in `packages` output.** Migration commit introduced a stale `mkShell` block as a second `default` inside `packages`, causing `nix flake check` to fail with "attribute 'default' already defined". Fixed by removing the orphaned `mkShell` block (lines 49-54) that referenced undefined variables (`ciCommon`, `batsWithLibs`).
+10. **Duplicate `default` attribute in `packages` output.** Migration commit introduced a stale `mkShell` block as a second `default` inside `packages`,
+causing `nix flake check` to fail with "attribute 'default' already defined".
+Fixed by removing the orphaned `mkShell` block that referenced undefined variables (`ciCommon`, `batsWithLibs`).
+
+11. **Confirm app missing materialized packages on PATH.** The `nix run .#confirm` coherence check verifies that every `lefthook-*` command in
+`lefthook.yml` is on PATH, but the confirm app's `runtimeInputs` only included basic coreutils—not the fragment-provided lefthook wrappers.
+Also, `flake.lock` was stale (missing `set-and-setting` input).
+Fixed by adding `mat.packages` from `materializationFor` to the confirm app's `runtimeInputs` and regenerating `flake.lock`.
