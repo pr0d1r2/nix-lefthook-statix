@@ -101,3 +101,7 @@ Fixed by removing the orphaned `mkShell` block that referenced undefined variabl
 `lefthook.yml` is on PATH, but the confirm app's `runtimeInputs` only included basic coreutils—not the fragment-provided lefthook wrappers.
 Also, `flake.lock` was stale (missing `set-and-setting` input).
 Fixed by adding `mat.packages` from `materializationFor` to the confirm app's `runtimeInputs` and regenerating `flake.lock`.
+
+12. **Embedded shell in flake.nix fails nix-no-embedded-shell-check.** The `settingHook` and `apps.confirm.text` attributes used inline `'' ... ''` shell strings,
+violating the no-embedded-shell invariant enforced by `set-and-setting.lib.checksFor`.
+Fixed by extracting shell to `nix/setting-hook.sh` and `nix/confirm.sh` with `@PLACEHOLDER@` substitution via `builtins.replaceStrings` + `builtins.readFile`.
