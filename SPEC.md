@@ -1,6 +1,11 @@
+# nix-lefthook-statix
+
 ## §D — Description
 
-nix-lefthook-statix is a Nix flake that packages a lefthook-compatible wrapper around [statix](https://github.com/nerdypepper/statix), a static analysis tool for Nix files. The wrapper filters `.nix` files from staged arguments, silently skips missing files, and runs statix on each remaining file, exiting non-zero if any check fails. It is consumed by other Nix projects either as a lefthook remote (pulling `lefthook-remote.yml`) or as a flake input providing a `lefthook-statix` executable. Target users are Nix developers who want automated statix linting in their git pre-commit and pre-push hooks.
+nix-lefthook-statix is a Nix flake that packages a lefthook-compatible wrapper around [statix](https://github.com/nerdypepper/statix), a static analysis tool for Nix files.
+The wrapper filters `.nix` files from staged arguments, silently skips missing files, and runs statix on each remaining file, exiting non-zero if any check fails.
+It is consumed by other Nix projects either as a lefthook remote (pulling `lefthook-remote.yml`) or as a flake input providing a `lefthook-statix` executable.
+Target users are Nix developers who want automated statix linting in their git pre-commit and pre-push hooks.
 
 ## §V — Invariants
 
@@ -62,7 +67,7 @@ nix-lefthook-statix is a Nix flake that packages a lefthook-compatible wrapper a
 | `x` | T3 | ~~Update `actions/checkout` in `update-pins.yml` from `@v4` to `@v6` to match `ci.yml`.~~ Obsolete — `update-pins.yml` was removed. |
 | `x` | T4 | Add test for exit code when mixing passing and failing `.nix` files in one invocation. |
 | `x` | T5 | Add test for files with spaces or special characters in names. |
-| `x` | T6 | Add TOML linter to lefthook for `.rtk/filters.toml` (linter skill requires every tracked file type to have a linter). |
+| `x` | T6 | ~~Add TOML linter to lefthook for `.rtk/filters.toml`.~~ Obsolete — referenced guardrails have no TOML fragment. |
 | `x` | T7 | Harmonize bats library loading: `dev.bats` uses `load.bash` extension while `lefthook-statix.bats` uses `load` without extension. |
 | `x` | T8 | Add `nix/direnv.sh` extraction per flake skill (dev shell invocations should use an extracted shell script). |
 
@@ -76,7 +81,7 @@ nix-lefthook-statix is a Nix flake that packages a lefthook-compatible wrapper a
 
 4. ~~**No markdownlint lefthook command.**~~ Resolved — `lefthook.yml` now has markdownlint in both `pre-commit` and `pre-push`.
 
-5. ~~**No TOML linter.**~~ Resolved — `lefthook.yml` now has a `taplo lint` command in both `pre-commit` and `pre-push` scoped to `*.toml`, and `taplo` is in both dev shells.
+5. ~~**No TOML linter.**~~ Obsolete — the referenced standard has no TOML fragment; `.rtk/filters.toml` is tool configuration rather than a consumer interface.
 
 6. **Sequential file processing in wrapper.** `lefthook-statix.sh` processes files one-at-a-time in a loop rather than passing all files to `statix check` at once. This is less efficient for large changesets but ensures per-file error reporting.
 
@@ -84,4 +89,19 @@ nix-lefthook-statix is a Nix flake that packages a lefthook-compatible wrapper a
 
 8. **Orphaned `tests/unit/update-pins.bats` after `update-pins.yml` removal.** The pin-refresh commit dropped `.github/workflows/update-pins.yml` but left its test file, causing two bats failures in CI. Fixed by removing the orphaned test file.
 
-9. **Missing `lefthook-markdownlint` / `lefthook-markdownlint-agentic` wrappers.** `lefthook.yml` invoked `lefthook-markdownlint` and `lefthook-markdownlint-agentic`, but `flake.nix` never packaged those wrappers, so both commands exited 127 (`No such file or directory`) in CI's `build-linux`. Fixed by adding the `nix-lefthook-markdownlint` and `nix-lefthook-markdownlint-agentic` flake inputs and wrapping them in `lefthookWrappersFor` (matching the upstream packaging, including the `is-markdown-agentic` runtime input and the `@MARKDOWNLINT_AGENTIC_CONFIG@` substitution).
+9. **Missing `lefthook-markdownlint` / `lefthook-markdownlint-agentic` wrappers.** `lefthook.yml` invoked `lefthook-markdownlint` and `lefthook-markdownlint-agentic`,
+but `flake.nix` never packaged those wrappers, so both commands exited 127 in CI's `build-linux`.
+Fixed by adding the flake inputs and wrapping them in `lefthookWrappersFor`.
+
+10. **Duplicate `default` attribute in `packages` output.** Migration commit introduced a stale `mkShell` block as a second `default` inside `packages`,
+causing `nix flake check` to fail with "attribute 'default' already defined".
+Fixed by removing the orphaned `mkShell` block that referenced undefined variables (`ciCommon`, `batsWithLibs`).
+
+11. **Confirm app missing materialized packages on PATH.** The `nix run .#confirm` coherence check verifies that every `lefthook-*` command in
+`lefthook.yml` is on PATH, but the confirm app's `runtimeInputs` only included basic coreutils—not the fragment-provided lefthook wrappers.
+Also, `flake.lock` was stale (missing `set-and-setting` input).
+Fixed by adding `mat.packages` from `materializationFor` to the confirm app's `runtimeInputs` and regenerating `flake.lock`.
+
+12. **Embedded shell in flake.nix fails nix-no-embedded-shell-check.** The `settingHook` and `apps.confirm.text` attributes used inline `'' ... ''` shell strings,
+violating the no-embedded-shell invariant enforced by `set-and-setting.lib.checksFor`.
+Fixed by extracting shell to `nix/setting-hook.sh` and `nix/confirm.sh` with `@PLACEHOLDER@` substitution via `builtins.replaceStrings` + `builtins.readFile`.
