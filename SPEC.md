@@ -67,7 +67,7 @@ Target users are Nix developers who want automated statix linting in their git p
 | `x` | T3 | ~~Update `actions/checkout` in `update-pins.yml` from `@v4` to `@v6` to match `ci.yml`.~~ Obsolete — `update-pins.yml` was removed. |
 | `x` | T4 | Add test for exit code when mixing passing and failing `.nix` files in one invocation. |
 | `x` | T5 | Add test for files with spaces or special characters in names. |
-| `x` | T6 | Add TOML linter to lefthook for `.rtk/filters.toml` (linter skill requires every tracked file type to have a linter). |
+| `x` | T6 | ~~Add TOML linter to lefthook for `.rtk/filters.toml`.~~ Obsolete — referenced guardrails have no TOML fragment. |
 | `x` | T7 | Harmonize bats library loading: `dev.bats` uses `load.bash` extension while `lefthook-statix.bats` uses `load` without extension. |
 | `x` | T8 | Add `nix/direnv.sh` extraction per flake skill (dev shell invocations should use an extracted shell script). |
 
@@ -81,7 +81,7 @@ Target users are Nix developers who want automated statix linting in their git p
 
 4. ~~**No markdownlint lefthook command.**~~ Resolved — `lefthook.yml` now has markdownlint in both `pre-commit` and `pre-push`.
 
-5. ~~**No TOML linter.**~~ Resolved — `lefthook.yml` now has a `taplo lint` command in both `pre-commit` and `pre-push` scoped to `*.toml`, and `taplo` is in both dev shells.
+5. ~~**No TOML linter.**~~ Obsolete — the referenced standard has no TOML fragment; `.rtk/filters.toml` is tool configuration rather than a consumer interface.
 
 6. **Sequential file processing in wrapper.** `lefthook-statix.sh` processes files one-at-a-time in a loop rather than passing all files to `statix check` at once. This is less efficient for large changesets but ensures per-file error reporting.
 

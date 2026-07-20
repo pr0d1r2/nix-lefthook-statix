@@ -54,30 +54,60 @@
         let
           mat = set-and-setting.lib.materializationFor { inherit pkgs fragments; };
           sys = pkgs.stdenv.hostPlatform.system;
+          batsWithLibs = pkgs.bats.withLibraries (p: [
+            p.bats-assert
+            p.bats-file
+            p.bats-support
+          ]);
+          shells = set-and-setting.lib.mkDevShells {
+            inherit pkgs;
+            basePackages = mat.packages ++ [
+              self.packages.${sys}.default
+              batsWithLibs
+            ];
+            defaultShellHook = builtins.replaceStrings [ "@BATS_LIB_PATH@" ] [ "${batsWithLibs}" ] (
+              builtins.readFile ./dev.sh
+            );
+            settingHook =
+              builtins.replaceStrings
+                [
+                  "@SETTING_BIN@"
+                  "@FRAGMENTS@"
+                  "@FRAGMENTS_DIR@"
+                  "@ASSEMBLE_SCRIPT@"
+                ]
+                [
+                  "${self.packages.${sys}.setting}"
+                  "${builtins.concatStringsSep " " fragments}"
+                  "${set-and-setting}/setting/integrations/lefthook"
+                  "${set-and-setting}/setting/lib/assemble-lefthook.sh"
+                ]
+                (builtins.readFile ./nix/setting-hook.sh);
+          };
         in
-        set-and-setting.lib.mkDevShells {
-          inherit pkgs;
-          basePackages = mat.packages;
-          settingHook =
-            builtins.replaceStrings
-              [
-                "@SETTING_BIN@"
-                "@FRAGMENTS@"
-                "@FRAGMENTS_DIR@"
-                "@ASSEMBLE_SCRIPT@"
-              ]
-              [
-                "${self.packages.${sys}.setting}"
-                "${builtins.concatStringsSep " " fragments}"
-                "${set-and-setting}/setting/integrations/lefthook"
-                "${set-and-setting}/setting/lib/assemble-lefthook.sh"
-              ]
-              (builtins.readFile ./nix/setting-hook.sh);
+        shells
+        // {
+          # Retain the pre-migration, hook-free CI shell interface.
+          ci = pkgs.mkShell {
+            packages = mat.packages ++ [
+              self.packages.${sys}.default
+              batsWithLibs
+            ];
+            BATS_LIB_PATH = "${batsWithLibs}/share/bats";
+          };
         }
       );
 
       checks = forAllSystems (
         pkgs:
+        let
+          mat = set-and-setting.lib.materializationFor { inherit pkgs fragments; };
+          batsWithLibs = pkgs.bats.withLibraries (p: [
+            p.bats-assert
+            p.bats-file
+            p.bats-support
+          ]);
+        in
         (set-and-setting.lib.checksFor {
           inherit pkgs fragments;
           src = ./.;
@@ -87,6 +117,34 @@
             inherit pkgs;
             projectRoot = ./.;
           };
+          unit =
+            pkgs.runCommand "unit-tests"
+              {
+                nativeBuildInputs = mat.packages ++ [
+                  self.packages.${pkgs.stdenv.hostPlatform.system}.default
+                  batsWithLibs
+                  pkgs.bash
+                  pkgs.coreutils
+                ];
+              }
+              (
+                builtins.replaceStrings
+                  [
+                    "@SOURCE@"
+                    "@FRAGMENTS@"
+                    "@FRAGMENTS_DIR@"
+                    "@ASSEMBLE_SCRIPT@"
+                    "@BATS_LIB_PATH@"
+                  ]
+                  [
+                    "${./.}"
+                    "${builtins.concatStringsSep " " fragments}"
+                    "${set-and-setting}/setting/integrations/lefthook"
+                    "${set-and-setting}/setting/lib/assemble-lefthook.sh"
+                    "${batsWithLibs}/share/bats"
+                  ]
+                  (builtins.readFile ./nix/unit-tests.sh)
+              );
           default = pkgs.runCommand "checks" { } "touch $out";
         }
       );

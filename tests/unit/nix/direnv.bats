@@ -32,6 +32,11 @@ setup() {
     assert_success
 }
 
+@test "watches nix/unit-tests.sh for changes" {
+    run grep 'watch_file nix/unit-tests.sh' "$DIRENV_SH"
+    assert_success
+}
+
 @test "uses flake" {
     run grep 'use flake' "$DIRENV_SH"
     assert_success
