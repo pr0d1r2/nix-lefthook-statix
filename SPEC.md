@@ -53,7 +53,7 @@ Target users are Nix developers who want automated statix linting in their git p
 |---|---|---|
 | `lefthook.yml` | YAML | Local lefthook config with remote integrations and statix commands. |
 | `lefthook-remote.yml` | YAML | Consumed by other repos via lefthook remote; defines statix pre-commit/pre-push commands using the wrapper. |
-| `config/lefthook/file_size_limits.yml` | YAML | Per-extension file size limits (default 4096, lock 65536, nix 10240). |
+| `config/lefthook/file_size_limits.yml` | YAML | Per-extension file size limits (default 4096, lock 131072, nix 10240). |
 | `.yamllint.yml` | YAML | yamllint config: disables truthy key checks and line-length. |
 | `.markdownlint.yml` | YAML | markdownlint config: disables MD013 (line length). |
 | `.editorconfig` | INI | Editor defaults: UTF-8, LF, 2-space indent, trailing whitespace trim. |
@@ -105,3 +105,7 @@ Fixed by adding `mat.packages` from `materializationFor` to the confirm app's `r
 12. **Embedded shell in flake.nix fails nix-no-embedded-shell-check.** The `settingHook` and `apps.confirm.text` attributes used inline `'' ... ''` shell strings,
 violating the no-embedded-shell invariant enforced by `set-and-setting.lib.checksFor`.
 Fixed by extracting shell to `nix/setting-hook.sh` and `nix/confirm.sh` with `@PLACEHOLDER@` substitution via `builtins.replaceStrings` + `builtins.readFile`.
+
+13. **`flake.lock` exceeds file-size-check `.lock` limit after pin refresh.** The `nix flake update` in the pin-refresh commit grew `flake.lock` to 120413 bytes,
+exceeding the 65536-byte `.lock` limit in `config/lefthook/file_size_limits.yml`.
+Fixed by raising the `.lock` limit to 131072 (128 KB) to accommodate the nested `nixpkgs-lock` dependency chain.
