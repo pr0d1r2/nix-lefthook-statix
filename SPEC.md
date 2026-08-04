@@ -111,3 +111,7 @@ Fixed by extracting shell to `nix/setting-hook.sh` and `nix/confirm.sh` with `@P
 13. **`flake.lock` exceeds file-size-check `.lock` limit after pin refresh.** The `nix flake update` in the pin-refresh commit grew `flake.lock` to 120413 bytes,
 exceeding the 65536-byte `.lock` limit in `config/lefthook/file_size_limits.yml`.
 Fixed by raising the `.lock` limit to 131072 (128 KB) to accommodate the nested `nixpkgs-lock` dependency chain.
+
+14. **`flake-outputs.nix` was not formatted.** The flake manifest migration left the imported outputs module indented four spaces, causing the `nixfmt-check` guardrail to fail. Fixed by applying nixfmt formatting to the module.
+
+15. **Markdown fragment test checked the wrong flake module.** The outputs migration moved fragment declarations from `flake.nix` to `flake-outputs.nix`, but the unit test still searched the former. Fixed the test to inspect the module that owns the declaration.

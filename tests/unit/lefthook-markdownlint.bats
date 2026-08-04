@@ -5,7 +5,7 @@ setup() {
     load "${BATS_LIB_PATH}/bats-assert/load.bash"
 
     LEFTHOOK_YML="$BATS_TEST_DIRNAME/../../lefthook.yml"
-    FLAKE_NIX="$BATS_TEST_DIRNAME/../../flake.nix"
+    FLAKE_OUTPUTS_NIX="$BATS_TEST_DIRNAME/../../flake-outputs.nix"
 }
 
 @test "lefthook pre-commit has markdownlint command" {
@@ -51,7 +51,7 @@ setup() {
     assert_success
 }
 
-@test "flake.nix includes markdown fragment" {
-    run grep '"markdown"' "$FLAKE_NIX"
+@test "flake outputs include markdown fragment" {
+    run grep '"markdown"' "$FLAKE_OUTPUTS_NIX"
     assert_success
 }
