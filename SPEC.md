@@ -93,6 +93,8 @@ Target users are Nix developers who want automated statix linting in their git p
 but `flake.nix` never packaged those wrappers, so both commands exited 127 in CI's `build-linux`.
 Fixed by adding the flake inputs and wrapping them in `lefthookWrappersFor`.
 
+10. **Flake manifest rejected the outputs definition.** The guardrails manifest check disallowed helper bindings and a constructed `outputs` attrset in `flake.nix`. Fixed by delegating `outputs` to the separately formatted `flake-outputs.nix` module.
+
 10. **Duplicate `default` attribute in `packages` output.** Migration commit introduced a stale `mkShell` block as a second `default` inside `packages`,
 causing `nix flake check` to fail with "attribute 'default' already defined".
 Fixed by removing the orphaned `mkShell` block that referenced undefined variables (`ciCommon`, `batsWithLibs`).
