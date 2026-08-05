@@ -59,12 +59,14 @@ in
               "@FRAGMENTS@"
               "@FRAGMENTS_DIR@"
               "@ASSEMBLE_SCRIPT@"
+              "@ENSURE_TIMEOUTS@"
             ]
             [
               "${self.packages.${sys}.setting}"
               "${builtins.concatStringsSep " " fragments}"
               "${set-and-setting}/setting/integrations/lefthook"
               "${set-and-setting}/setting/lib/assemble-lefthook.sh"
+              "${./nix/ensure-lefthook-timeouts.sh}"
             ]
             (builtins.readFile ./nix/setting-hook.sh);
       };
@@ -119,6 +121,7 @@ in
                 "@FRAGMENTS_DIR@"
                 "@ASSEMBLE_SCRIPT@"
                 "@BATS_LIB_PATH@"
+                "@ENSURE_TIMEOUTS@"
               ]
               [
                 "${./.}"
@@ -126,6 +129,7 @@ in
                 "${set-and-setting}/setting/integrations/lefthook"
                 "${set-and-setting}/setting/lib/assemble-lefthook.sh"
                 "${batsWithLibs}/share/bats"
+                "${./nix/ensure-lefthook-timeouts.sh}"
               ]
               (builtins.readFile ./nix/unit-tests.sh)
           );

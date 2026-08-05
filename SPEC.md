@@ -117,3 +117,5 @@ Fixed by raising the `.lock` limit to 131072 (128 KB) to accommodate the nested 
 14. **`flake-outputs.nix` was not formatted.** The flake manifest migration left the imported outputs module indented four spaces, causing the `nixfmt-check` guardrail to fail. Fixed by applying nixfmt formatting to the module.
 
 15. **Markdown fragment test checked the wrong flake module.** The outputs migration moved fragment declarations from `flake.nix` to `flake-outputs.nix`, but the unit test still searched the former. Fixed the test to inspect the module that owns the declaration.
+
+16. **External base fragment omitted guardrail timeouts.** The assembled `gitleaks`, conflict-marker, and local-path commands came from the pinned external fragment without timeouts, despite the repository YAML including them. Fixed by normalizing generated lefthook commands at the assembly boundary.
