@@ -3,35 +3,35 @@
 pre-commit:
   commands:
     gitleaks:
-      run: timeout ${LEFTHOOK_GITLEAKS_TIMEOUT:-30} lefthook-gitleaks {staged_files}
+      run: timeout --foreground ${LEFTHOOK_GITLEAKS_TIMEOUT:-30} lefthook-gitleaks {staged_files}
     git-conflict-markers:
-      run: timeout ${LEFTHOOK_GIT_CONFLICT_MARKERS_TIMEOUT:-30} lefthook-git-conflict-markers {staged_files}
+      run: timeout --foreground ${LEFTHOOK_GIT_CONFLICT_MARKERS_TIMEOUT:-30} lefthook-git-conflict-markers {staged_files}
     git-no-local-paths:
-      run: timeout ${LEFTHOOK_GIT_NO_LOCAL_PATHS_TIMEOUT:-30} lefthook-git-no-local-paths {staged_files}
+      run: timeout --foreground ${LEFTHOOK_GIT_NO_LOCAL_PATHS_TIMEOUT:-30} lefthook-git-no-local-paths {staged_files}
     markdownlint:
       glob: "*.md"
-      run: timeout ${LEFTHOOK_MARKDOWNLINT_TIMEOUT:-30} lefthook-markdownlint {staged_files}
+      run: timeout --foreground ${LEFTHOOK_MARKDOWNLINT_TIMEOUT:-30} lefthook-markdownlint {staged_files}
     markdownlint-agentic:
       glob: "*.md"
-      run: timeout ${LEFTHOOK_MARKDOWNLINT_AGENTIC_TIMEOUT:-30} lefthook-markdownlint-agentic {staged_files}
+      run: timeout --foreground ${LEFTHOOK_MARKDOWNLINT_AGENTIC_TIMEOUT:-30} lefthook-markdownlint-agentic {staged_files}
     yamllint:
       glob: "*.{yml,yaml}"
-      run: timeout ${LEFTHOOK_YAMLLINT_TIMEOUT:-30} lefthook-yamllint {staged_files}
+      run: timeout --foreground ${LEFTHOOK_YAMLLINT_TIMEOUT:-30} lefthook-yamllint {staged_files}
 
 pre-push:
   commands:
     gitleaks:
-      run: timeout ${LEFTHOOK_GITLEAKS_TIMEOUT:-30} lefthook-gitleaks {push_files}
+      run: timeout --foreground ${LEFTHOOK_GITLEAKS_TIMEOUT:-30} lefthook-gitleaks {push_files}
     git-conflict-markers:
-      run: timeout ${LEFTHOOK_GIT_CONFLICT_MARKERS_TIMEOUT:-30} lefthook-git-conflict-markers {push_files}
+      run: timeout --foreground ${LEFTHOOK_GIT_CONFLICT_MARKERS_TIMEOUT:-30} lefthook-git-conflict-markers {push_files}
     git-no-local-paths:
-      run: timeout ${LEFTHOOK_GIT_NO_LOCAL_PATHS_TIMEOUT:-30} lefthook-git-no-local-paths {push_files}
+      run: timeout --foreground ${LEFTHOOK_GIT_NO_LOCAL_PATHS_TIMEOUT:-30} lefthook-git-no-local-paths {push_files}
     markdownlint:
       glob: "*.md"
-      run: timeout ${LEFTHOOK_MARKDOWNLINT_TIMEOUT:-30} lefthook-markdownlint {push_files}
+      run: timeout --foreground ${LEFTHOOK_MARKDOWNLINT_TIMEOUT:-30} lefthook-markdownlint {push_files}
     markdownlint-agentic:
       glob: "*.md"
-      run: timeout ${LEFTHOOK_MARKDOWNLINT_AGENTIC_TIMEOUT:-30} lefthook-markdownlint-agentic {push_files}
+      run: timeout --foreground ${LEFTHOOK_MARKDOWNLINT_AGENTIC_TIMEOUT:-30} lefthook-markdownlint-agentic {push_files}
     yamllint:
       glob: "*.{yml,yaml}"
-      run: timeout ${LEFTHOOK_YAMLLINT_TIMEOUT:-30} lefthook-yamllint {push_files}
+      run: timeout --foreground ${LEFTHOOK_YAMLLINT_TIMEOUT:-30} lefthook-yamllint {push_files}

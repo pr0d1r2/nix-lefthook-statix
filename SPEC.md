@@ -97,6 +97,8 @@ Fixed by adding the flake inputs and wrapping them in `lefthookWrappersFor`.
 
 10. **Duplicate `default` attribute in `packages` output.** Migration commit introduced a stale `mkShell` block as a second `default` inside `packages`,
 causing `nix flake check` to fail with "attribute 'default' already defined".
+
+11. **Guardrail commands without timeouts.** The first three `lefthook.yml` guardrails were missing the timeout wrapper, causing the guardrail unit test to fail. Fixed by applying `timeout --foreground` consistently to every guardrail command in both hooks.
 Fixed by removing the orphaned `mkShell` block that referenced undefined variables (`ciCommon`, `batsWithLibs`).
 
 11. **Confirm app missing materialized packages on PATH.** The `nix run .#confirm` coherence check verifies that every `lefthook-*` command in
