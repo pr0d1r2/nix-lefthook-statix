@@ -1,7 +1,6 @@
 ---
 
 pre-commit:
-  parallel: true
   commands:
     gitleaks:
       run: lefthook-gitleaks {staged_files}
@@ -20,7 +19,6 @@ pre-commit:
       run: timeout ${LEFTHOOK_YAMLLINT_TIMEOUT:-30} lefthook-yamllint {staged_files}
 
 pre-push:
-  parallel: true
   commands:
     markdownlint:
       glob: "*.md"

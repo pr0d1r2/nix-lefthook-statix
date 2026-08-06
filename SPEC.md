@@ -121,3 +121,5 @@ Fixed by raising the `.lock` limit to 131072 (128 KB) to accommodate the nested 
 16. **External base fragment omitted guardrail timeouts.** The assembled `gitleaks`, conflict-marker, and local-path commands came from the pinned external fragment without timeouts, despite the repository YAML including them. Fixed by normalizing generated lefthook commands at the assembly boundary.
 
 17. **Checked-in `lefthook.yml` drifted from the pinned fragment assembly.** The manually maintained file omitted the generated remotes, parallel settings, and fragment commands, so the guardrail fidelity check failed. Fixed by restoring the canonical assembled configuration.
+
+18. **Checked-in `lefthook.yml` was regenerated through the dev-shell materializer rather than the fidelity assembler.** That path stripped the canonical remotes and fragment commands, causing the guardrail fidelity check to fail. Fixed by restoring the exact fragment-assembled configuration.
