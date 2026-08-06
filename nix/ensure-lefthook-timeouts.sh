@@ -1,6 +1,7 @@
 # shellcheck shell=bash
 # Add the project-wide timeout to commands supplied by external fragments.
-sed -i -E 's#(run: )lefthook-#\1timeout --foreground ${LEFTHOOK_GUARDRAIL_TIMEOUT:-30} lefthook-#' lefthook.yml
+# Keep the variable expansion literal: it belongs in the generated lefthook config.
+sed -i -E "s#(run: )lefthook-#\1timeout --foreground \${LEFTHOOK_GUARDRAIL_TIMEOUT:-30} lefthook-#" lefthook.yml
 
 # The pinned base fragment currently defines these checks only for pre-commit.
 # Keep the generated configuration symmetric with the repository contract.
@@ -15,6 +16,6 @@ if ! awk '/^pre-push:/{p=1} p' lefthook.yml | grep -q '^    gitleaks:'; then
       next
     }
     {print}
-  ' lefthook.yml > lefthook.yml.tmp
+  ' lefthook.yml >lefthook.yml.tmp
   mv lefthook.yml.tmp lefthook.yml
 fi
