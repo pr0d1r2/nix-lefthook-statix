@@ -3,11 +3,11 @@
 pre-commit:
   commands:
     gitleaks:
-      run: lefthook-gitleaks {staged_files}
+      run: timeout --foreground ${LEFTHOOK_GUARDRAIL_TIMEOUT:-30} lefthook-gitleaks {staged_files}
     git-conflict-markers:
-      run: lefthook-git-conflict-markers {staged_files}
+      run: timeout --foreground ${LEFTHOOK_GUARDRAIL_TIMEOUT:-30} lefthook-git-conflict-markers {staged_files}
     git-no-local-paths:
-      run: lefthook-git-no-local-paths {staged_files}
+      run: timeout --foreground ${LEFTHOOK_GUARDRAIL_TIMEOUT:-30} lefthook-git-no-local-paths {staged_files}
     markdownlint:
       glob: "*.md"
       run: timeout ${LEFTHOOK_MARKDOWNLINT_TIMEOUT:-30} lefthook-markdownlint {staged_files}
@@ -20,6 +20,12 @@ pre-commit:
 
 pre-push:
   commands:
+    gitleaks:
+      run: timeout --foreground ${LEFTHOOK_GUARDRAIL_TIMEOUT:-30} lefthook-gitleaks {push_files}
+    git-conflict-markers:
+      run: timeout --foreground ${LEFTHOOK_GUARDRAIL_TIMEOUT:-30} lefthook-git-conflict-markers {push_files}
+    git-no-local-paths:
+      run: timeout --foreground ${LEFTHOOK_GUARDRAIL_TIMEOUT:-30} lefthook-git-no-local-paths {push_files}
     markdownlint:
       glob: "*.md"
       run: timeout ${LEFTHOOK_MARKDOWNLINT_TIMEOUT:-30} lefthook-markdownlint {push_files}

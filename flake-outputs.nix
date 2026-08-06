@@ -141,6 +141,12 @@ in
     pkgs:
     let
       mat = set-and-setting.lib.materializationFor { inherit pkgs fragments; };
+      confirmAssemble = pkgs.writeShellScript "assemble-confirm" (
+        builtins.replaceStrings
+          [ "@ASSEMBLE_SCRIPT@" "@ENSURE_TIMEOUTS@" ]
+          [ "${set-and-setting}/setting/lib/assemble-lefthook.sh" "${./nix/ensure-lefthook-timeouts.sh}" ]
+          (builtins.readFile ./nix/assemble-confirm.sh)
+      );
     in
     {
       confirm = {
@@ -169,7 +175,7 @@ in
                 ]
                 [
                   "${set-and-setting}/setting/integrations/lefthook"
-                  "${set-and-setting}/setting/lib/assemble-lefthook.sh"
+                  "${confirmAssemble}"
                   "${set-and-setting}/setting/lib/detect-fragments.sh"
                   "${self.packages.${pkgs.stdenv.hostPlatform.system}.setting}"
                   "${set-and-setting}/lib/confirm.sh"
