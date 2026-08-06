@@ -6,4 +6,5 @@ FRAGMENTS="@FRAGMENTS@" \
   FRAGMENTS_DIR="@FRAGMENTS_DIR@" \
   bash "@ASSEMBLE_SCRIPT@"
 cp -f "$_assemble_out/lefthook.yml" lefthook.yml
+bash "@ENSURE_TIMEOUTS@"
 rm -rf "$_assemble_out"

@@ -97,6 +97,8 @@ Fixed by adding the flake inputs and wrapping them in `lefthookWrappersFor`.
 
 10. **Duplicate `default` attribute in `packages` output.** Migration commit introduced a stale `mkShell` block as a second `default` inside `packages`,
 causing `nix flake check` to fail with "attribute 'default' already defined".
+
+11. **Guardrail commands without timeouts.** The first three `lefthook.yml` guardrails were missing the timeout wrapper, causing the guardrail unit test to fail. Fixed by applying `timeout --foreground` consistently to every guardrail command in both hooks.
 Fixed by removing the orphaned `mkShell` block that referenced undefined variables (`ciCommon`, `batsWithLibs`).
 
 11. **Confirm app missing materialized packages on PATH.** The `nix run .#confirm` coherence check verifies that every `lefthook-*` command in
@@ -115,3 +117,13 @@ Fixed by raising the `.lock` limit to 131072 (128 KB) to accommodate the nested 
 14. **`flake-outputs.nix` was not formatted.** The flake manifest migration left the imported outputs module indented four spaces, causing the `nixfmt-check` guardrail to fail. Fixed by applying nixfmt formatting to the module.
 
 15. **Markdown fragment test checked the wrong flake module.** The outputs migration moved fragment declarations from `flake.nix` to `flake-outputs.nix`, but the unit test still searched the former. Fixed the test to inspect the module that owns the declaration.
+
+16. **External base fragment omitted guardrail timeouts.** The assembled `gitleaks`, conflict-marker, and local-path commands came from the pinned external fragment without timeouts, despite the repository YAML including them. Fixed by normalizing generated lefthook commands at the assembly boundary.
+
+17. **Checked-in `lefthook.yml` drifted from the pinned fragment assembly.** The manually maintained file omitted the generated remotes, parallel settings, and fragment commands, so the guardrail fidelity check failed. Fixed by restoring the canonical assembled configuration.
+
+18. **Checked-in `lefthook.yml` was regenerated through the dev-shell materializer rather than the fidelity assembler.** That path stripped the canonical remotes and fragment commands, causing the guardrail fidelity check to fail. Fixed by restoring the exact fragment-assembled configuration.
+
+19. **Checked-in `lefthook.yml` did not contain the timeout-normalized guardrail commands or the generated pre-push guardrails.** The dev-shell materializer added these commands, so CI fidelity failed. Fixed by committing the materializer's canonical output.
+
+20. **ShellCheck rejected the timeout assembler.** The generated shell parameter expansion was embedded in a single-quoted `sed` expression (`SC2016`), and the confirm assembler used the Nix `out` build variable without declaring its required environment contract (`SC2154`). Fixed by escaping the intentionally literal generated expansion and validating `out` before use.

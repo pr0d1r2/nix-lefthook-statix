@@ -6,6 +6,7 @@ FRAGMENTS="@FRAGMENTS@" \
   out="$PWD" \
   FRAGMENTS_DIR="@FRAGMENTS_DIR@" \
   bash "@ASSEMBLE_SCRIPT@"
+bash "@ENSURE_TIMEOUTS@"
 export BATS_LIB_PATH="@BATS_LIB_PATH@"
 bats tests/unit
 # shellcheck disable=SC2154
