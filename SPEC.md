@@ -129,3 +129,7 @@ Fixed by raising the `.lock` limit to 131072 (128 KB) to accommodate the nested 
 20. **ShellCheck rejected the timeout assembler.** The generated shell parameter expansion was embedded in a single-quoted `sed` expression (`SC2016`), and the confirm assembler used the Nix `out` build variable without declaring its required environment contract (`SC2154`). Fixed by escaping the intentionally literal generated expansion and validating `out` before use.
 
 21. **Canonical `lefthook.yml` was ignored and absent from the checkout.** The guardrail fidelity check could not compare the repository configuration with the fragment assembly because `.gitignore` excluded the generated artifact. Fixed by committing the canonical assembled, timeout-normalized `lefthook.yml`.
+
+22. **Checked-in `lefthook.yml` diverged from the pinned fragment assembler.** The previous restoration retained locally added timeout wrappers and pre-push commands while omitting the pinned `actionlint` commands, so the guardrail fidelity check failed. Fixed by synchronizing the file exactly with the pinned assembly output.
+
+23. **Canonical `actions` fragment referenced an unavailable actionlint wrapper.** The generated configuration included `lefthook-actionlint`, but consumer shells did not put that command on PATH. Fixed by packaging the wrapper and adding it to development, CI, and confirm environments.

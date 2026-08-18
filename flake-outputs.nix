@@ -37,6 +37,11 @@ in
     pkgs:
     let
       mat = set-and-setting.lib.materializationFor { inherit pkgs fragments; };
+      actionlintWrapper = pkgs.writeShellApplication {
+        name = "lefthook-actionlint";
+        runtimeInputs = [ pkgs.actionlint ];
+        text = builtins.readFile ./nix/actionlint.sh;
+      };
       sys = pkgs.stdenv.hostPlatform.system;
       batsWithLibs = pkgs.bats.withLibraries (p: [
         p.bats-assert
@@ -46,6 +51,7 @@ in
       shells = set-and-setting.lib.mkDevShells {
         inherit pkgs;
         basePackages = mat.packages ++ [
+          actionlintWrapper
           self.packages.${sys}.default
           batsWithLibs
         ];
@@ -76,6 +82,7 @@ in
       # Retain the pre-migration, hook-free CI shell interface.
       ci = pkgs.mkShell {
         packages = mat.packages ++ [
+          actionlintWrapper
           self.packages.${sys}.default
           batsWithLibs
         ];
@@ -88,6 +95,11 @@ in
     pkgs:
     let
       mat = set-and-setting.lib.materializationFor { inherit pkgs fragments; };
+      actionlintWrapper = pkgs.writeShellApplication {
+        name = "lefthook-actionlint";
+        runtimeInputs = [ pkgs.actionlint ];
+        text = builtins.readFile ./nix/actionlint.sh;
+      };
       batsWithLibs = pkgs.bats.withLibraries (p: [
         p.bats-assert
         p.bats-file
@@ -107,6 +119,7 @@ in
         pkgs.runCommand "unit-tests"
           {
             nativeBuildInputs = mat.packages ++ [
+              actionlintWrapper
               self.packages.${pkgs.stdenv.hostPlatform.system}.default
               batsWithLibs
               pkgs.bash
@@ -141,6 +154,11 @@ in
     pkgs:
     let
       mat = set-and-setting.lib.materializationFor { inherit pkgs fragments; };
+      actionlintWrapper = pkgs.writeShellApplication {
+        name = "lefthook-actionlint";
+        runtimeInputs = [ pkgs.actionlint ];
+        text = builtins.readFile ./nix/actionlint.sh;
+      };
       confirmAssemble = pkgs.writeShellScript "assemble-confirm" (
         builtins.replaceStrings
           [ "@ASSEMBLE_SCRIPT@" "@ENSURE_TIMEOUTS@" ]
@@ -162,7 +180,7 @@ in
               pkgs.git
               pkgs.gnugrep
             ]
-            ++ mat.packages;
+            ++ mat.packages ++ [ actionlintWrapper ];
             text =
               builtins.replaceStrings
                 [
