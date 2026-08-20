@@ -110,6 +110,8 @@ Fixed by adding `mat.packages` from `materializationFor` to the confirm app's `r
 violating the no-embedded-shell invariant enforced by `set-and-setting.lib.checksFor`.
 Fixed by extracting shell to `nix/setting-hook.sh` and `nix/confirm.sh` with `@PLACEHOLDER@` substitution via `builtins.replaceStrings` + `builtins.readFile`.
 
+21. **Checked-in `lefthook.yml` was missing.** The guardrails fidelity check could not compare the checked-in hook configuration with the canonical fragment assembly. Fixed by restoring the assembled, timeout-normalized `lefthook.yml`.
+
 13. **`flake.lock` exceeds file-size-check `.lock` limit after pin refresh.** The `nix flake update` in the pin-refresh commit grew `flake.lock` to 120413 bytes,
 exceeding the 65536-byte `.lock` limit in `config/lefthook/file_size_limits.yml`.
 Fixed by raising the `.lock` limit to 131072 (128 KB) to accommodate the nested `nixpkgs-lock` dependency chain.
