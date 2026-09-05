@@ -106,11 +106,11 @@ Fixed by removing the orphaned `mkShell` block that referenced undefined variabl
 Also, `flake.lock` was stale (missing `set-and-setting` input).
 Fixed by adding `mat.packages` from `materializationFor` to the confirm app's `runtimeInputs` and regenerating `flake.lock`.
 
-12. **Embedded shell in flake.nix fails nix-no-embedded-shell-check.** The `settingHook` and `apps.confirm.text` attributes used inline `'' ... ''` shell strings,
+14. **Embedded shell in flake.nix fails nix-no-embedded-shell-check.** The `settingHook` and `apps.confirm.text` attributes used inline `'' ... ''` shell strings,
 violating the no-embedded-shell invariant enforced by `set-and-setting.lib.checksFor`.
 Fixed by extracting shell to `nix/setting-hook.sh` and `nix/confirm.sh` with `@PLACEHOLDER@` substitution via `builtins.replaceStrings` + `builtins.readFile`.
 
-13. **`flake.lock` exceeds file-size-check `.lock` limit after pin refresh.** The `nix flake update` in the pin-refresh commit grew `flake.lock` to 120413 bytes,
+15. **`flake.lock` exceeds file-size-check `.lock` limit after pin refresh.** The `nix flake update` in the pin-refresh commit grew `flake.lock` to 120413 bytes,
 exceeding the 65536-byte `.lock` limit in `config/lefthook/file_size_limits.yml`.
 Fixed by raising the `.lock` limit to 131072 (128 KB) to accommodate the nested `nixpkgs-lock` dependency chain.
 
