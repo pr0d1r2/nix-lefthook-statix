@@ -136,3 +136,5 @@ Fixed by raising the `.lock` limit to 131072 (128 KB) to accommodate the nested 
 26. **Guardrail history skipped entries 16–22.** The previous repair renumbered duplicate entries but left the history non-contiguous, so the sequence validator still failed. Fixed by renumbering the later entries to fill the gap and recording this repair.
 
 27. **Bats guardrail wrapper was not materialized.** The reusable guardrails workflow ran `lefthook-tdd-order-bats` after the 20 passing unit tests, but the lockfile pinned `set-and-setting` before that wrapper was available, so the command exited 127. Fixed by updating only the `set-and-setting` flake input and its transitive tool pins.
+
+28. **Timeout normalization leaked pre-push guardrails into later hook sections.** The assembler kept its `pre-push` state active through `commit-msg`, so it inserted `gitleaks`, conflict-marker, and local-path commands under the wrong hook. The repaired canonical config also exceeded the stale YAML size limit. Fixed the section boundary and exact existing-section check, and raised the YAML limit to accommodate the generated configuration.
