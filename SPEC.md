@@ -114,22 +114,23 @@ Fixed by extracting shell to `nix/setting-hook.sh` and `nix/confirm.sh` with `@P
 exceeding the 65536-byte `.lock` limit in `config/lefthook/file_size_limits.yml`.
 Fixed by raising the `.lock` limit to 131072 (128 KB) to accommodate the nested `nixpkgs-lock` dependency chain.
 
-23. **`flake-outputs.nix` was not formatted.** The flake manifest migration left the imported outputs module indented four spaces, causing the `nixfmt-check` guardrail to fail. Fixed by applying nixfmt formatting to the module.
+16. **`flake-outputs.nix` was not formatted.** The flake manifest migration left the imported outputs module indented four spaces, causing the `nixfmt-check` guardrail to fail. Fixed by applying nixfmt formatting to the module.
 
-24. **Markdown fragment test checked the wrong flake module.** The outputs migration moved fragment declarations from `flake.nix` to `flake-outputs.nix`, but the unit test still searched the former. Fixed the test to inspect the module that owns the declaration.
+17. **Markdown fragment test checked the wrong flake module.** The outputs migration moved fragment declarations from `flake.nix` to `flake-outputs.nix`, but the unit test still searched the former. Fixed the test to inspect the module that owns the declaration.
 
-25. **External base fragment omitted guardrail timeouts.** The assembled `gitleaks`, conflict-marker, and local-path commands came from the pinned external fragment without timeouts, despite the repository YAML including them. Fixed by normalizing generated lefthook commands at the assembly boundary.
+18. **External base fragment omitted guardrail timeouts.** The assembled `gitleaks`, conflict-marker, and local-path commands came from the pinned external fragment without timeouts, despite the repository YAML including them. Fixed by normalizing generated lefthook commands at the assembly boundary.
 
-26. **Checked-in `lefthook.yml` drifted from the pinned fragment assembly.** The manually maintained file omitted the generated remotes, parallel settings, and fragment commands, so the guardrail fidelity check failed. Fixed by restoring the canonical assembled configuration.
+19. **Checked-in `lefthook.yml` drifted from the pinned fragment assembly.** The manually maintained file omitted the generated remotes, parallel settings, and fragment commands, so the guardrail fidelity check failed. Fixed by restoring the canonical assembled configuration.
 
-27. **Checked-in `lefthook.yml` was regenerated through the dev-shell materializer rather than the fidelity assembler.** That path stripped the canonical remotes and fragment commands, causing the guardrail fidelity check to fail. Fixed by restoring the exact fragment-assembled configuration.
+20. **Checked-in `lefthook.yml` was regenerated through the dev-shell materializer rather than the fidelity assembler.** That path stripped the canonical remotes and fragment commands, causing the guardrail fidelity check to fail. Fixed by restoring the exact fragment-assembled configuration.
 
-28. **Checked-in `lefthook.yml` did not contain the timeout-normalized guardrail commands or the generated pre-push guardrails.** The dev-shell materializer added these commands, so CI fidelity failed. Fixed by committing the materializer's canonical output.
+21. **Checked-in `lefthook.yml` did not contain the timeout-normalized guardrail commands or the generated pre-push guardrails.** The dev-shell materializer added these commands, so CI fidelity failed. Fixed by committing the materializer's canonical output.
 
-29. **ShellCheck rejected the timeout assembler.** The generated shell parameter expansion was embedded in a single-quoted `sed` expression (`SC2016`), and the confirm assembler used the Nix `out` build variable without declaring its required environment contract (`SC2154`). Fixed by escaping the intentionally literal generated expansion and validating `out` before use.
+22. **ShellCheck rejected the timeout assembler.** The generated shell parameter expansion was embedded in a single-quoted `sed` expression (`SC2016`), and the confirm assembler used the Nix `out` build variable without declaring its required environment contract (`SC2154`). Fixed by escaping the intentionally literal generated expansion and validating `out` before use.
 
-30. **Guardrail tests could not inspect the generated lefthook configuration.** `lefthook.yml` was ignored even though the unit tests read it directly, so the guardrail check failed when the generated file was absent. Fixed by committing the canonical timeout-normalized configuration.
+23. **Guardrail tests could not inspect the generated lefthook configuration.** `lefthook.yml` was ignored even though the unit tests read it directly, so the guardrail check failed when the generated file was absent. Fixed by committing the canonical timeout-normalized configuration.
 
-31. **Guardrail history contained duplicate §B sequence numbers.** The accumulated bug history repeated entries 10 and 11, violating sequential history validation. Fixed by recording this failure and continuing the sequence.
+24. **Guardrail history contained duplicate §B sequence numbers.** The accumulated bug history repeated entries 10 and 11, violating sequential history validation. Fixed by recording this failure and continuing the sequence.
 
-32. **Guardrail history still contained duplicate §B sequence numbers.** Entries 14 and 15 were duplicated after the previous history repair, so the guardrail sequence validator continued to fail. Fixed by renumbering the later entries to maintain one contiguous sequence.
+25. **Guardrail history still contained duplicate §B sequence numbers.** Entries 14 and 15 were duplicated after the previous history repair, so the guardrail sequence validator continued to fail. Fixed by renumbering the later entries to maintain one contiguous sequence.
+26. **Guardrail history skipped entries 16–22.** The previous repair renumbered duplicate entries but left the history non-contiguous, so the sequence validator still failed. Fixed by renumbering the later entries to fill the gap and recording this repair.
