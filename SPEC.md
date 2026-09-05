@@ -127,3 +127,5 @@ Fixed by raising the `.lock` limit to 131072 (128 KB) to accommodate the nested 
 19. **Checked-in `lefthook.yml` did not contain the timeout-normalized guardrail commands or the generated pre-push guardrails.** The dev-shell materializer added these commands, so CI fidelity failed. Fixed by committing the materializer's canonical output.
 
 20. **ShellCheck rejected the timeout assembler.** The generated shell parameter expansion was embedded in a single-quoted `sed` expression (`SC2016`), and the confirm assembler used the Nix `out` build variable without declaring its required environment contract (`SC2154`). Fixed by escaping the intentionally literal generated expansion and validating `out` before use.
+
+21. **Guardrail tests could not inspect the generated lefthook configuration.** `lefthook.yml` was ignored even though the unit tests read it directly, so the guardrail check failed when the generated file was absent. Fixed by committing the canonical timeout-normalized configuration.
