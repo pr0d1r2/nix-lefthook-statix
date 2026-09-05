@@ -134,3 +134,5 @@ Fixed by raising the `.lock` limit to 131072 (128 KB) to accommodate the nested 
 
 25. **Guardrail history still contained duplicate §B sequence numbers.** Entries 14 and 15 were duplicated after the previous history repair, so the guardrail sequence validator continued to fail. Fixed by renumbering the later entries to maintain one contiguous sequence.
 26. **Guardrail history skipped entries 16–22.** The previous repair renumbered duplicate entries but left the history non-contiguous, so the sequence validator still failed. Fixed by renumbering the later entries to fill the gap and recording this repair.
+
+27. **Bats guardrail wrapper was not materialized.** The reusable guardrails workflow ran `lefthook-tdd-order-bats` after the 20 passing unit tests, but the lockfile pinned `set-and-setting` before that wrapper was available, so the command exited 127. Fixed by updating only the `set-and-setting` flake input and its transitive tool pins.
