@@ -95,13 +95,13 @@ Fixed by adding the flake inputs and wrapping them in `lefthookWrappersFor`.
 
 10. **Flake manifest rejected the outputs definition.** The guardrails manifest check disallowed helper bindings and a constructed `outputs` attrset in `flake.nix`. Fixed by delegating `outputs` to the separately formatted `flake-outputs.nix` module.
 
-10. **Duplicate `default` attribute in `packages` output.** Migration commit introduced a stale `mkShell` block as a second `default` inside `packages`,
+11. **Duplicate `default` attribute in `packages` output.** Migration commit introduced a stale `mkShell` block as a second `default` inside `packages`,
 causing `nix flake check` to fail with "attribute 'default' already defined".
 
-11. **Guardrail commands without timeouts.** The first three `lefthook.yml` guardrails were missing the timeout wrapper, causing the guardrail unit test to fail. Fixed by applying `timeout --foreground` consistently to every guardrail command in both hooks.
+12. **Guardrail commands without timeouts.** The first three `lefthook.yml` guardrails were missing the timeout wrapper, causing the guardrail unit test to fail. Fixed by applying `timeout --foreground` consistently to every guardrail command in both hooks.
 Fixed by removing the orphaned `mkShell` block that referenced undefined variables (`ciCommon`, `batsWithLibs`).
 
-11. **Confirm app missing materialized packages on PATH.** The `nix run .#confirm` coherence check verifies that every `lefthook-*` command in
+13. **Confirm app missing materialized packages on PATH.** The `nix run .#confirm` coherence check verifies that every `lefthook-*` command in
 `lefthook.yml` is on PATH, but the confirm app's `runtimeInputs` only included basic coreutils—not the fragment-provided lefthook wrappers.
 Also, `flake.lock` was stale (missing `set-and-setting` input).
 Fixed by adding `mat.packages` from `materializationFor` to the confirm app's `runtimeInputs` and regenerating `flake.lock`.
@@ -129,3 +129,5 @@ Fixed by raising the `.lock` limit to 131072 (128 KB) to accommodate the nested 
 20. **ShellCheck rejected the timeout assembler.** The generated shell parameter expansion was embedded in a single-quoted `sed` expression (`SC2016`), and the confirm assembler used the Nix `out` build variable without declaring its required environment contract (`SC2154`). Fixed by escaping the intentionally literal generated expansion and validating `out` before use.
 
 21. **Guardrail tests could not inspect the generated lefthook configuration.** `lefthook.yml` was ignored even though the unit tests read it directly, so the guardrail check failed when the generated file was absent. Fixed by committing the canonical timeout-normalized configuration.
+
+22. **Guardrail history contained duplicate §B sequence numbers.** The accumulated bug history repeated entries 10 and 11, violating sequential history validation. Fixed by recording this failure and continuing the sequence.
