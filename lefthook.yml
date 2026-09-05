@@ -13,6 +13,9 @@ pre-commit:
     nix-flake-check:
       glob: "*.nix"
       run: timeout ${LEFTHOOK_NIX_FLAKE_CHECK_TIMEOUT:-60} nix flake check
+    actionlint:
+      glob: ".github/workflows/*.{yml,yaml}"
+      run: timeout ${LEFTHOOK_ACTIONLINT_TIMEOUT:-30} lefthook-actionlint {staged_files}
     nixfmt:
       glob: "*.nix"
       run: timeout --foreground ${LEFTHOOK_GUARDRAIL_TIMEOUT:-30} lefthook-nixfmt {staged_files}
@@ -61,6 +64,9 @@ pre-push:
     nix-flake-check:
       glob: "*.nix"
       run: timeout ${LEFTHOOK_NIX_FLAKE_CHECK_TIMEOUT:-60} nix flake check
+    actionlint:
+      glob: ".github/workflows/*.{yml,yaml}"
+      run: timeout ${LEFTHOOK_ACTIONLINT_TIMEOUT:-30} lefthook-actionlint {push_files}
     nixfmt:
       glob: "*.nix"
       run: timeout --foreground ${LEFTHOOK_GUARDRAIL_TIMEOUT:-30} lefthook-nixfmt {push_files}
@@ -82,6 +88,14 @@ pre-push:
     no-shell-functions:
       glob: "*.sh"
       run: timeout --foreground ${LEFTHOOK_GUARDRAIL_TIMEOUT:-30} lefthook-no-shell-functions {push_files}
+    bats-parse:
+      glob: "**/*.bats"
+      run: timeout ${LEFTHOOK_BATS_PARSE_TIMEOUT:-30} lefthook-bats-parse {push_files}
+    bats-unit:
+      glob: "**/*.bats"
+      run: timeout ${LEFTHOOK_BATS_UNIT_TIMEOUT:-300} lefthook-bats-unit
+    tdd-order-bats:
+      run: timeout ${LEFTHOOK_TDD_ORDER_TIMEOUT:-30} lefthook-tdd-order-bats
     markdownlint:
       glob: "*.md"
       run: timeout ${LEFTHOOK_MARKDOWNLINT_TIMEOUT:-30} lefthook-markdownlint {push_files}

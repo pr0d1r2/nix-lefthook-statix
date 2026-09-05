@@ -16,9 +16,11 @@ let
 
   fragments = [
     "base"
+    "actions"
     "nix"
     "shell"
     "ascii"
+    "bats"
     "markdown"
     "yaml"
   ];
