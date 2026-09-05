@@ -1,0 +1,16 @@
+---
+exempt:
+  - class: ".editorconfig"
+    reason: "checked-by-its-own-consumer"
+  - class: ".envrc"
+    reason: "checked-by-its-own-consumer"
+  - class: ".gitignore"
+    reason: "checked-by-its-own-consumer"
+  - class: ".github/workflows"
+    ticket: 319
+  - class: "LICENSE"
+    ticket: 332
+  - class: "lock"
+    ticket: 335
+  - class: "txt"
+    reason: "checked-by-its-own-consumer"

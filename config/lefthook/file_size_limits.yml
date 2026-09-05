@@ -4,4 +4,4 @@ extensions:
   md: 16384
   nix: 10240
   bats: 4096
-  yml: 4096
+  yml: 8192
