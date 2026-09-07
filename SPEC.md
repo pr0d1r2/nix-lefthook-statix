@@ -146,3 +146,5 @@ Fixed by raising the `.lock` limit to 131072 (128 KB) to accommodate the nested 
 32. **The flake entrypoint stopped importing its custom outputs module.** The public flake therefore omitted the repository's `unit` check, so the reusable guardrails job could not run the project's own test check. Fixed by delegating `outputs` to `flake-outputs.nix`.
 
 33. **Statix warnings no longer affected the command exit status.** The pinned Statix release reported diagnostics while returning zero, so the wrapper's warning tests passed incorrectly. Fixed by treating emitted warning diagnostics as a failed check while preserving Statix errors.
+
+34. **Flake entrypoint was not nixfmt-formatted.** The multiline `outputs` argument remained on one line, causing the repository's `nixfmt-check` guardrail to fail. Fixed by applying the canonical nixfmt formatting.
