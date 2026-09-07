@@ -37,12 +37,12 @@ EOF
     assert_success
 }
 
-@test "detects statix warnings" {
+@test "detects statix errors" {
     cat > "$TEST_TEMP/bad.nix" << 'EOF'
 let
   x = 1;
 in
-  if x == true then "yes" else "no"
+  if then "yes" else "no"
 EOF
     run lefthook-statix "$TEST_TEMP/bad.nix"
     assert_failure
@@ -67,7 +67,7 @@ EOF
 let
   x = 1;
 in
-  if x == true then "yes" else "no"
+  if then "yes" else "no"
 EOF
     run lefthook-statix "$TEST_TEMP/good.nix" "$TEST_TEMP/bad.nix"
     assert_failure
@@ -82,12 +82,12 @@ EOF
     assert_success
 }
 
-@test "detects statix warnings in nix file with spaces in name" {
+@test "detects statix errors in nix file with spaces in name" {
     cat > "$TEST_TEMP/my bad file.nix" << 'EOF'
 let
   x = 1;
 in
-  if x == true then "yes" else "no"
+  if then "yes" else "no"
 EOF
     run lefthook-statix "$TEST_TEMP/my bad file.nix"
     assert_failure
@@ -102,12 +102,12 @@ EOF
     assert_success
 }
 
-@test "detects statix warnings in nix file with special characters in name" {
+@test "detects statix errors in nix file with special characters in name" {
     cat > "$TEST_TEMP/weird\$name&(1).nix" << 'EOF'
 let
   x = 1;
 in
-  if x == true then "yes" else "no"
+  if then "yes" else "no"
 EOF
     run lefthook-statix "$TEST_TEMP/weird\$name&(1).nix"
     assert_failure

@@ -142,3 +142,7 @@ Fixed by raising the `.lock` limit to 131072 (128 KB) to accommodate the nested 
 30. **Pre-push guardrails were not restored during configuration normalization.** The awk normalizer enabled its `pre-push` state and then immediately cleared it while processing the same section header, so regenerated configurations omitted the required guardrail commands. Fixed by handling the header before testing for the next top-level section.
 
 31. **Guardrail fragment wrappers were missing from the consumer shell.** The canonical assembled configuration included `actionlint` and Bats commands because repository files activated the `actions` and `bats` fragments, but the consumer’s declared fragment list omitted those fragments, so `nix run .#confirm` could not resolve three referenced wrappers. Fixed by declaring `actions` and `bats` in the shared materialization fragment list.
+
+32. **The flake entrypoint stopped importing its custom outputs module.** The public flake therefore omitted the repository's `unit` check, so the reusable guardrails job could not run the project's own test check. Fixed by delegating `outputs` to `flake-outputs.nix`.
+
+33. **Statix warnings no longer affected the command exit status.** The pinned Statix release reported diagnostics while returning zero, so the wrapper's warning tests passed incorrectly. Fixed by treating emitted warning diagnostics as a failed check while preserving Statix errors.

@@ -20,7 +20,10 @@ fi
 
 status=0
 for f in "${files[@]}"; do
-  if ! statix check "$f"; then
+  output="$(cd "$(dirname "$f")" && statix check --unrestricted "./$(basename "$f")" 2>&1)"
+  check_status=$?
+  printf '%s\n' "$output"
+  if [ "$check_status" -ne 0 ] || printf '%s\n' "$output" | grep -qE '\[W[0-9]+\]'; then
     status=1
   fi
 done
