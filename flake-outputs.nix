@@ -82,15 +82,16 @@ in
           batsWithLibs
         ];
         BATS_LIB_PATH = "${batsWithLibs}/share/bats";
-        shellHook = builtins.replaceStrings
-          [ "@FRAGMENTS@" "@FRAGMENTS_DIR@" "@ASSEMBLE_SCRIPT@" "@ENSURE_TIMEOUTS@" ]
-          [
-            (builtins.concatStringsSep " " fragments)
-            "${set-and-setting}/setting/integrations/lefthook"
-            "${set-and-setting}/setting/lib/assemble-lefthook.sh"
-            "${./nix/ensure-lefthook-timeouts.sh}"
-          ]
-          (builtins.readFile ./nix/ci-shell.sh);
+        shellHook =
+          builtins.replaceStrings
+            [ "@FRAGMENTS@" "@FRAGMENTS_DIR@" "@ASSEMBLE_SCRIPT@" "@ENSURE_TIMEOUTS@" ]
+            [
+              (builtins.concatStringsSep " " fragments)
+              "${set-and-setting}/setting/integrations/lefthook"
+              "${set-and-setting}/setting/lib/assemble-lefthook.sh"
+              "${./nix/ensure-lefthook-timeouts.sh}"
+            ]
+            (builtins.readFile ./nix/ci-shell.sh);
       };
     }
   );

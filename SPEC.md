@@ -151,3 +151,4 @@ Fixed by raising the `.lock` limit to 131072 (128 KB) to accommodate the nested 
 
 34. **Flake entrypoint was not nixfmt-formatted.** The multiline `outputs` argument remained on one line, causing the repository's `nixfmt-check` guardrail to fail. Fixed by applying the canonical nixfmt formatting.
 35. **Bats fixture cleanup removed Bats' own workspace.** `tests/unit/dev.bats` reused the reserved `TMPDIR` environment variable, so its teardown deleted Bats' run directory and caused setup/teardown failures in CI. Fixed by using the test-specific `TEST_TEMP_DIR` variable.
+36. **Flake outputs formatting drifted.** `flake-outputs.nix` failed the repository's `nixfmt-check` guardrail. Fixed by applying the canonical nixfmt formatting to the CI shell hook expression.
