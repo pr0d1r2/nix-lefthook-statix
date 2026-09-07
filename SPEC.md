@@ -118,6 +118,8 @@ Fixed by raising the `.lock` limit to 131072 (128 KB) to accommodate the nested 
 
 17. **Markdown fragment test checked the wrong flake module.** The outputs migration moved fragment declarations from `flake.nix` to `flake-outputs.nix`, but the unit test still searched the former. Fixed the test to inspect the module that owns the declaration.
 
+18. **CI shell did not materialize `lefthook.yml`.** The hook-free `ci` dev shell ran the bats suite without assembling the generated lefthook configuration, so guardrail tests failed during setup when they tried to read it. Fixed by assembling the configuration and applying timeout normalization in the CI shell hook.
+
 18. **External base fragment omitted guardrail timeouts.** The assembled `gitleaks`, conflict-marker, and local-path commands came from the pinned external fragment without timeouts, despite the repository YAML including them. Fixed by normalizing generated lefthook commands at the assembly boundary.
 
 19. **Checked-in `lefthook.yml` drifted from the pinned fragment assembly.** The manually maintained file omitted the generated remotes, parallel settings, and fragment commands, so the guardrail fidelity check failed. Fixed by restoring the canonical assembled configuration.
