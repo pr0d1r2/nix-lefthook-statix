@@ -39,10 +39,7 @@ EOF
 
 @test "detects statix warnings" {
     cat > "$TEST_TEMP/bad.nix" << 'EOF'
-let
-  x = 1;
-in
-  if x == true then "yes" else "no"
+let in "useless"
 EOF
     run lefthook-statix "$TEST_TEMP/bad.nix"
     assert_failure
@@ -64,10 +61,7 @@ EOF
 pkgs.hello
 EOF
     cat > "$TEST_TEMP/bad.nix" << 'EOF'
-let
-  x = 1;
-in
-  if x == true then "yes" else "no"
+let in "useless"
 EOF
     run lefthook-statix "$TEST_TEMP/good.nix" "$TEST_TEMP/bad.nix"
     assert_failure
@@ -84,10 +78,7 @@ EOF
 
 @test "detects statix warnings in nix file with spaces in name" {
     cat > "$TEST_TEMP/my bad file.nix" << 'EOF'
-let
-  x = 1;
-in
-  if x == true then "yes" else "no"
+let in "useless"
 EOF
     run lefthook-statix "$TEST_TEMP/my bad file.nix"
     assert_failure
