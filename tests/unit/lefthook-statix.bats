@@ -1,9 +1,9 @@
 #!/usr/bin/env bats
 
 setup() {
-    load "${BATS_LIB_PATH}/bats-support/load.bash"
-    load "${BATS_LIB_PATH}/bats-assert/load.bash"
-    load "${BATS_LIB_PATH}/bats-file/load.bash"
+    bats_load_library bats-support
+    bats_load_library bats-assert
+    bats_load_library bats-file
 
     TEST_TEMP="$(mktemp -d)"
 }
