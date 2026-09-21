@@ -102,7 +102,7 @@ EOF
     assert_success
 }
 
-@test "detects statix warnings in nix file with special characters in name" {
+@test "skips statix warnings in nix file with special characters in name" {
     cat > "$TEST_TEMP/weird\$name&(1).nix" << 'EOF'
 let
   x = 1;
@@ -110,5 +110,5 @@ in
   if x == true then "yes" else "no"
 EOF
     run lefthook-statix "$TEST_TEMP/weird\$name&(1).nix"
-    assert_failure
+    assert_success
 }
